@@ -1,121 +1,54 @@
-import { ReminderService } from "../services/reminderService.js";
+import { ReminderService } from '../services/reminderService.js';
 
 export const ReminderController = {
-  async getAllReminders(req, res) {
+  async getAllReminders(req, res, next) {
     try {
-      const reminders = await ReminderService.getAllReminders();
-
+      console.log('Received query parameters:');
+      const { listType } = req.query;
+      const reminders = await ReminderService.getAllReminders(listType);
       res.status(200).json(reminders);
     } catch (error) {
-      console.error("Error fetching reminders:", error);
-
-      res.status(500).json({
-        message: "Internal Server Error",
-      });
+      next(error); // Pass error to errorHandlerMiddleware 
     }
   },
 
-  async getReminderById(req, res) {
+  async getReminderById(req, res, next) {
     try {
-      const reminderId = Number(req.params.id);
-
-      if (isNaN(reminderId)) {
-        return res.status(400).json({
-          message: "Invalid reminder ID",
-        });
-      }
-
+      const reminderId = parseInt(req.params.id, 10);
       const reminder = await ReminderService.getReminderById(reminderId);
-
-      if (!reminder) {
-        return res.status(404).json({
-          message: "Reminder not found",
-        });
-      }
-
       res.status(200).json(reminder);
     } catch (error) {
-      console.error("Error fetching reminder:", error);
-
-      res.status(500).json({
-        message: "Internal Server Error",
-      });
+      next(error); // Pass error to errorHandlerMiddleware
     }
   },
 
-  async createReminder(req, res) {
+  async createReminder(req, res, next) {
     try {
       const newReminder = await ReminderService.createReminder(req.body);
-
-      res.status(201).json(newReminder);
+      res.status(200).json(newReminder);
     } catch (error) {
-  console.error(error);
-
-  res.status(500).json({
-    error: error.message,
-  });
-}
-  },
-
-  async updateReminder(req, res) {
-    try {
-      const reminderId = Number(req.params.id);
-
-      if (isNaN(reminderId)) {
-        return res.status(400).json({
-          message: "Invalid reminder ID",
-        });
-      }
-
-      const updatedReminder = await ReminderService.updateReminder(
-        reminderId,
-        req.body
-      );
-
-      if (!updatedReminder) {
-        return res.status(404).json({
-          message: "Reminder not found",
-        });
-      }
-
-      res.status(200).json(updatedReminder);
-    } catch (error) {
-      console.error("Error updating reminder:", error);
-
-      res.status(500).json({
-        message: "Internal Server Error",
-      });
+      next(error); // Pass error to errorHandlerMiddleware
     }
   },
 
-  async deleteReminder(req, res) {
+  async updateReminder(req, res, next) {
     try {
-      const reminderId = Number(req.params.id);
+      const reminderId = parseInt(req.params.id, 10);
 
-      if (isNaN(reminderId)) {
-        return res.status(400).json({
-          message: "Invalid reminder ID",
-        });
-      }
-
-      const deletedReminder =
-        await ReminderService.deleteReminder(reminderId);
-
-      if (!deletedReminder) {
-        return res.status(404).json({
-          message: "Reminder not found",
-        });
-      }
-
-      res.status(200).json({
-        message: "Reminder deleted successfully",
-      });
+      const updatedReminder = await ReminderService.updateReminder(reminderId, req.body);
+      res.status(200).json(updatedReminder);
     } catch (error) {
-      console.error("Error deleting reminder:", error);
+      next(error); // Pass error to errorHandlerMiddleware
+    }
+  },
 
-      res.status(500).json({
-        message: "Internal Server Error",
-      });
+  async deleteReminder(req, res, next) {
+    try {
+      const reminderId = parseInt(req.params.id, 10);
+      const reminder = await ReminderService.deleteReminder(reminderId);
+      res.status(200).json(reminder);
+    } catch (error) {
+      next(error); // Pass error to errorHandlerMiddleware
     }
   },
 };
