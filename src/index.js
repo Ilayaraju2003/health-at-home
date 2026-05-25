@@ -16,6 +16,6 @@ app.use('/reminders', reminderRoutes);
 // Should be last
 app.use(errorHandlerMiddleware);
 
-app.listen(port, "0.0.0.0", () => {
+app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
