@@ -1,4 +1,5 @@
-import { ActivityIndicator,
+import {
+  ActivityIndicator,
   Text,
   FlatList,
 } from "react-native";

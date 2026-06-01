@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { QueryClient,QueryClientProvider,} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +17,14 @@ export default function RootLayout() {
           },
         }}
       >
+        <Stack.Screen
+          name="login"
+          options={{
+            title: "Login",
+            headerShown: false,
+          }}
+        />
+
         <Stack.Screen
           name="index"
           options={{
