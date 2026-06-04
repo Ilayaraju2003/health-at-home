@@ -1,4 +1,4 @@
-import { View,Text,TextInput,TouchableOpacity,StyleSheet,Alert,} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
 
@@ -9,7 +9,7 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-         "http://192.168.1.5:5000/api/auth/login",
+        "http://192.168.1.5:5000/api/auth/login",
         {
           method: "POST",
           headers: {
@@ -33,7 +33,7 @@ export default function LoginScreen() {
       }
     } catch (error) {
       console.log("LOGIN ERROR:", error);
-  Alert.alert("Error", String(error));
+      Alert.alert("Error", String(error));
     }
   };
 
