@@ -1,5 +1,5 @@
 #use the official nodejs image for build the react app
-FROM node:18 AS build
+FROM node:20 AS build
 
 #set working directory
 WORKDIR /app
@@ -12,18 +12,15 @@ RUN npm install
 COPY . .
 
 #build the react app
-RUN npx expo export:web
+RUN npx expo export
 
 #serve the app with nginx
 FROM nginx:alpine
 
 #copy the build folder to the nginx html folder
-COPY --from=build /app/web-build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 8081
 
-CMD ["npx", "expo", "start", "--tunnel"]
-
-
-
+CMD ["nginx", "-g", "daemon off;"]
 

@@ -1,7 +1,7 @@
 
 export async function getReminders() {
   const response = await fetch(
-    "http://192.168.1.10:3000/reminders"
+    "http://localhost:5000/reminders"
   );
 
   if (!response.ok) {

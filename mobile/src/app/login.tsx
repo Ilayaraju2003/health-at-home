@@ -9,7 +9,7 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-        "http://192.168.1.10:3000/api/auth/login",
+         "http://192.168.1.5:5000/api/auth/login",
         {
           method: "POST",
           headers: {
@@ -32,7 +32,8 @@ export default function LoginScreen() {
         Alert.alert("Error", data.message);
       }
     } catch (error) {
-      Alert.alert("Error", "Server error");
+      console.log("LOGIN ERROR:", error);
+  Alert.alert("Error", String(error));
     }
   };
 
