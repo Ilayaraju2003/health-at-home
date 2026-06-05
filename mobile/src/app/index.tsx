@@ -1,72 +1,124 @@
 import {
-  ActivityIndicator,
+  View,
   Text,
-  FlatList,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
 } from "react-native";
+import { useState } from "react";
+import { router } from "expo-router";
 
-import { useQuery } from "@tanstack/react-query";
+export default function LoginScreen() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-import { getReminders } from "@/services/reminderService";
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert("Error", "Please enter email and password");
+      return;
+    }
 
-import ReminderListItem from "@/components/ReminderListItem";
+    try {
+      setLoading(true);
 
-import { Reminder } from "@/types/reminder";
+      const response = await fetch(
+        "http://localhost:5000/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+            password,
+          }),
+        }
+      );
 
-export default function HomeScreen() {
-  const {
-    data,
-    isLoading,
-    error,
-  } = useQuery<Reminder[]>({
-    queryKey: ["reminders"],
-    queryFn: getReminders,
-  });
+      const data = await response.json();
 
-  if (isLoading) {
-    return (
-      <ActivityIndicator
-        style={{ marginTop: "20%" }}
-      />
-    );
-  }
+      if (data.success) {
+        Alert.alert("Success", "Login successful");
+        router.replace("/reminders");
+      } else {
+        Alert.alert("Login Failed", data.message);
+      }
+    } catch (error) {
+      console.error("LOGIN ERROR:", error);
 
-  if (error instanceof Error) {
-    return (
-      <Text
-        style={{
-          alignSelf: "center",
-          marginTop: "20%",
-        }}
-      >
-        {error.message}
-      </Text>
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <Text
-        style={{
-          alignSelf: "center",
-          marginTop: "20%",
-        }}
-      >
-        No reminders found
-      </Text>
-    );
-  }
+      Alert.alert(
+        "Error",
+        "Unable to connect to server"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <FlatList
-      data={data}
-      keyExtractor={(item) =>
-        item.id.toString()
-      }
-      renderItem={({ item }) => (
-        <ReminderListItem
-          reminderItem={item}
-        />
-      )}
-    />
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
+
+      <TextInput
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        style={styles.input}
+      />
+
+      <TextInput
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+        style={styles.input}
+      />
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleLogin}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>
+          {loading ? "Logging in..." : "Login"}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    marginBottom: 30,
+    textAlign: "center",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  button: {
+    backgroundColor: "#007bff",
+    padding: 15,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+});

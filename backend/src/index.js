@@ -3,7 +3,7 @@ import cors from 'cors';
 
 import reminderRoutes from './routes/reminderRoutes.js';
 import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.js';
-import authRoutes from './routes/authRoutes.js';
+import authRoutes from './routes/loginRoutes.js';
 
 const app = express();
 

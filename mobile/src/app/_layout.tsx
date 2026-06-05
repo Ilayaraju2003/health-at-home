@@ -1,5 +1,6 @@
-import { Stack } from "expo-router";
-import { QueryClient, QueryClientProvider, } from "@tanstack/react-query";
+import { router, Stack } from "expo-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TouchableOpacity, Text } from "react-native";
 
 const queryClient = new QueryClient();
 
@@ -17,26 +18,34 @@ export default function RootLayout() {
           },
         }}
       >
-        <Stack.Screen
-          name="login"
-          options={{
-            title: "Login",
-            headerShown: false,
-          }}
-        />
-
+        {/* Login Page */}
         <Stack.Screen
           name="index"
           options={{
-            title: "Reminders",
+            title: "Login",
           }}
         />
 
+        {/* Reminders Page */}
         <Stack.Screen
-          name="createUpdateReminder"
+          name="reminders"
           options={{
-            presentation: "modal",
-            title: "Create Reminder",
+            title: "Reminders",
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => router.replace("/")}
+                style={{ marginRight: 10 }}
+              >
+                <Text
+                  style={{
+                    color: "#007bff",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Logout
+                </Text>
+              </TouchableOpacity>
+            ),
           }}
         />
       </Stack>
