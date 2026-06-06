@@ -24,7 +24,7 @@ export default function LoginScreen() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/login",
+        "http://192.168.1.5:5000/api/auth/login",
         {
           method: "POST",
           headers: {
