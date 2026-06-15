@@ -1,96 +1,66 @@
-import { View, Text, StyleSheet, TouchableOpacity, } from "react-native";
-
-import { MaterialCommunityIcons, AntDesign, } from "@expo/vector-icons";
-
-import { useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import { Reminder } from "@/types/reminder";
 
-interface ReminderListItemProps { reminderItem: Reminder; }
+interface ReminderListItemProps {
+  reminderItem: Reminder;
+}
 
 export default function ReminderListItem({
   reminderItem,
 }: ReminderListItemProps) {
-  const [isCompleted, setIsCompleted] =
-    useState(reminderItem.completed);
-
   return (
-    <TouchableOpacity
-      onPress={() =>
-        setIsCompleted(!isCompleted)
-      }
+    <View
       style={{
         flexDirection: "row",
         alignItems: "center",
-        gap: 5,
-        borderBottomWidth:
-          StyleSheet.hairlineWidth,
-        borderBottomColor: "grey",
-        marginBottom: 20,
-        paddingBottom: 10,
-        paddingHorizontal: 15,
+        padding: 12,
       }}
     >
-      {isCompleted ? (
-        <MaterialCommunityIcons
-          name="circle-slice-8"
-          size={22}
-          color="#FF8C00"
-          style={{
-            alignSelf: "flex-start",
-          }}
-        />
-      ) : (
-        <MaterialCommunityIcons
-          name="checkbox-blank-circle-outline"
-          size={22}
-          color="grey"
-          style={{
-            alignSelf: "flex-start",
-          }}
-        />
-      )}
-
-      <View
-        style={{
-          gap: 5,
-          flexShrink: 1,
-        }}
-      >
+      <View style={{ flex: 1 }}>
         <Text
           style={{
             fontSize: 16,
-            fontWeight: "600",
+            fontWeight: "bold",
           }}
         >
           {reminderItem.reminder}
         </Text>
 
-        {!!reminderItem.notes && (
+        {reminderItem.notes ? (
           <Text
             style={{
-              fontSize: 12,
-              color: "grey",
+              fontSize: 13,
+              color: "gray",
+              marginTop: 3,
             }}
           >
             {reminderItem.notes}
           </Text>
-        )}
+        ) : null}
       </View>
 
-      <AntDesign
-        name="info-circle"
-        size={17}
-        color="#FF8C00"
-        style={{
-          alignSelf: "flex-start",
-          marginLeft: "auto",
-          marginRight: 5,
-        }}
+      <TouchableOpacity
         onPress={() =>
-          console.log("Navigate to edit")
+          router.push({
+            pathname: "/reminderDetails",
+            params: {
+              id: reminderItem.id,
+            },
+          })
         }
-      />
-    </TouchableOpacity>
+      >
+        <AntDesign
+          name="info-circle"
+          size={17} color="#FF8C00"
+          style={{
+            alignSelf: "flex-start",
+            marginLeft: "auto", marginRight: 5,
+          }}
+          onPress={() => router.push({ pathname: "/reminderDetails", params: { id: reminderItem.id, }, })} />
+      </TouchableOpacity>
+    </View>
   );
 }

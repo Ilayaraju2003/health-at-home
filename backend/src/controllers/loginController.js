@@ -2,18 +2,9 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    res.json({
-      success: true,
-      message: "Login successful",
-      user: {
-        email,
-      },
-    });
+    res.send("Login successful");
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).send(error.message);
   }
 };
 
@@ -21,18 +12,8 @@ export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    res.json({
-      success: true,
-      message: "Register successful",
-      user: {
-        name,
-        email,
-      },
-    });
+    res.send("Register successful");
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).send(error.message);
   }
 };

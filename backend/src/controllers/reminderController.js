@@ -51,22 +51,21 @@ export const ReminderController = {
     }
   },
 
-  async createReminder(req, res, next) {
-    try {
+ async createReminder(req, res, next) {
+  try {
+    const newReminder =
+      await ReminderService.createReminder(req.body);
 
-      const newReminder =
-        await ReminderService.createReminder(req.body);
+    res.status(201).json({
+      success: true,
+      message: "Reminder created successfully",
+      data: newReminder,
+    });
 
-      await redisClient.del("reminders:all");
-
-      console.log("🗑 Cache Cleared");
-
-      res.status(200).json(newReminder);
-
-    } catch (error) {
-      next(error);
-    }
-  },
+  } catch (error) {
+    next(error);
+  }
+},
 
   async updateReminder(req, res, next) {
     try {

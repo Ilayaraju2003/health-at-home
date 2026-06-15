@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,55 +7,21 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { useState } from "react";
 import { router } from "expo-router";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     if (!email.trim() || !password.trim()) {
       Alert.alert("Error", "Please enter email and password");
       return;
     }
 
-    try {
-      setLoading(true);
+    Alert.alert("Success", "Login successful");
 
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email.trim(),
-            password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        Alert.alert("Success", "Login successful");
-        router.replace("/reminders");
-      } else {
-        Alert.alert("Login Failed", data.message);
-      }
-    } catch (error) {
-      console.error("LOGIN ERROR:", error);
-
-      Alert.alert(
-        "Error",
-        "Unable to connect to server"
-      );
-    } finally {
-      setLoading(false);
-    }
+    router.replace("/reminders");
   };
 
   return (
@@ -72,19 +39,18 @@ export default function LoginScreen() {
 
       <TextInput
         placeholder="Password"
-        secureTextEntry
         value={password}
         onChangeText={setPassword}
+        secureTextEntry
         style={styles.input}
       />
 
       <TouchableOpacity
         style={styles.button}
         onPress={handleLogin}
-        disabled={loading}
       >
         <Text style={styles.buttonText}>
-          {loading ? "Logging in..." : "Login"}
+          Login
         </Text>
       </TouchableOpacity>
     </View>
@@ -96,29 +62,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 20,
+    backgroundColor: "#fff",
   },
+
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    marginBottom: 30,
     textAlign: "center",
+    marginBottom: 30,
   },
+
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    padding: 12,
     borderRadius: 10,
+    padding: 12,
     marginBottom: 15,
   },
+
   button: {
     backgroundColor: "#007bff",
     padding: 15,
     borderRadius: 10,
   },
+
   buttonText: {
     color: "#fff",
     textAlign: "center",
-    fontWeight: "bold",
     fontSize: 18,
+    fontWeight: "bold",
   },
 });
